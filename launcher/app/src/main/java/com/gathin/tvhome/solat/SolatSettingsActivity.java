@@ -19,11 +19,7 @@ public class SolatSettingsActivity extends Activity {
   button("Tetapan sistem TV",()->open(new Intent(Settings.ACTION_SETTINGS)));
   button("Pilih Home / kembali ke Google TV",()->open(new Intent(Settings.ACTION_HOME_SETTINGS)));
   buildReminderSettings();
-  button("Sumber & batasan",()->new AlertDialog.Builder(this).setTitle("Sumber & batasan").setMessage("Waktu & Hijri: portal rasmi e-Solat JAKIM. Tarikh selepas Maghrib menggunakan rekod Hijri hari berikutnya, bukan pengiraan anggaran. Cache tidak diekstrapolasi.
-
-Haier belum diuji secara fizikal. Pemilihan Home mungkin disekat firmware; aplikasi masih boleh dibuka dari Apps. Google TV asal kekal dipasang.
-
-Tiada root, ADB, debloat, Accessibility atau force-stop. Audio disediakan pada fasa peringatan.").setPositiveButton("Tutup",null).show());
+  button("Sumber & batasan",()->new AlertDialog.Builder(this).setTitle("Sumber & batasan").setMessage("Waktu & Hijri: portal rasmi e-Solat JAKIM. Tarikh selepas Maghrib menggunakan rekod Hijri hari berikutnya, bukan pengiraan anggaran. Cache tidak diekstrapolasi.\n\nHaier belum diuji secara fizikal. Pemilihan Home mungkin disekat firmware; aplikasi masih boleh dibuka dari Apps. Google TV asal kekal dipasang.\n\nTiada root, ADB, debloat, Accessibility atau force-stop. Audio disediakan pada fasa peringatan.").setPositiveButton("Tutup",null).show());
   button("Kembali",()->finish());render();
  }
  protected void buildReminderSettings(){}
