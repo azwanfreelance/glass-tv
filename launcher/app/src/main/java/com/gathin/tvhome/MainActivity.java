@@ -426,7 +426,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             open(systemIntent(Settings.ACTION_WIFI_SETTINGS));
             return true;
         });
-        btnSettings.setOnClickListener(v -> open(systemIntent(Settings.ACTION_SETTINGS)));
+        btnSettings.setOnClickListener(v -> new android.app.AlertDialog.Builder(this)
+                .setTitle("Settings").setItems(new String[]{"Solat TV", "Tetapan sistem TV", "Pilih Home / kembali ke Google TV"}, (dialog, which) -> {
+                    if (which == 0) startActivity(new Intent(this, com.gathin.tvhome.solat.SolatSettingsActivity.class));
+                    else open(systemIntent(which == 1 ? Settings.ACTION_SETTINGS : Settings.ACTION_HOME_SETTINGS));
+                }).show());
         btnSettings.setOnLongClickListener(v -> {
             if (!moduleCards) return false;   // off: a long press does nothing, as before the feature
             showModuleCards();
@@ -1452,6 +1456,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     private void updateShamsiDate() {
         if (shamsi) shamsiDate.setText(Shamsi.today());
+        TextView solat = findViewById(R.id.solatSummary);
+        if (solat != null) solat.setText(com.gathin.tvhome.solat.SolatStore.summary(this));
     }
 
     /** Shows the Wi-Fi network name on the button when we can read it, otherwise the connection type. */
