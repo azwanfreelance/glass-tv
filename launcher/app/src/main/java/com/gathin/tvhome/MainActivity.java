@@ -657,6 +657,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     protected void onResume() {
         super.onResume();
+        com.gathin.tvhome.solat.SolatRefreshJob.ensure(this);
+        com.gathin.tvhome.solat.SolatAlarms.schedule(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(packageReceiver, packageFilter, Context.RECEIVER_NOT_EXPORTED);
         } else {

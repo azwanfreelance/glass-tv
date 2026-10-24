@@ -39,13 +39,19 @@ jobs:
         with:
           packages: platforms;android-34 build-tools;34.0.0
       - uses: gradle/actions/setup-gradle@v4
+      - name: Fetch checksum-pinned CC0 azan audio
+        run: python3 tools/fetch-adhan.py
       - name: Unit tests and release build
         working-directory: launcher
         run: |
           chmod +x gradlew
           ./gradlew --no-daemon testReleaseUnitTest assembleRelease
-      - name: The launcher stays small
-        run: |
-          size=$(stat -c %s launcher/app/build/outputs/apk/release/app-release.apk)
-          echo "release APK: $((size / 1024)) KB"
-          test "$size" -lt 409600 || { echo "APK is over 400 KB; the launcher targets 1 GB TVs, keep it small"; exit 1; }
+      - name: Bound code and offline audio size
+        run: python3 tools/check_apk_size.py launcher/app/build/outputs/apk/release/app-release.apk
+      - name: Upload release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: solat-tv-release-apk
+          path: launcher/app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
+          retention-days: 14

@@ -12,3 +12,6 @@ backup/
 # App banners for the webOS simulator preview only: other companies' logos, kept out of the repository.
 webos/samples/
 *.ipk
+
+# Verified build input downloaded by tools/fetch-adhan.py
+launcher/app/src/main/res/raw/adhan.ogg
