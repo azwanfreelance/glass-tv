@@ -51,6 +51,7 @@ public class SolatSettingsActivity extends Activity {
   s.append("\nCuba PAUSE: ").append(SolatStore.prefs(this).getBoolean("pause",true)?"HIDUP":"MATI");
   s.append("\n").append(SolatStore.prefs(this).getString("alarm_status","Belum dijadualkan"));
   s.append("\n").append(SolatStore.prefs(this).getString("media_status","MediaSession memerlukan kebenaran pilihan"));
+  s.append("\n").append(SolatStore.prefs(this).getString("volume_status","Volume belum diubah"));
   s.append("\n").append(SolatStore.prefs(this).getString("last_event","Belum ada azan"));status.setText(s.toString());}
  private void chooseZone(){try{JSONArray a=SolatStore.zones(this);String[] labels=new String[a.length()];for(int i=0;i<a.length();i++)labels[i]=a.getJSONObject(i).getString("code")+" · "+a.getJSONObject(i).getString("name");new AlertDialog.Builder(this).setTitle("Zon rasmi JAKIM").setItems(labels,(dialog,index)->{try{SolatStore.prefs(this).edit().putString("zone",a.getJSONObject(index).getString("code")).commit();onZoneChanged();render();refresh();}catch(Exception ignored){}}).show();}catch(Exception e){Toast.makeText(this,"Senarai zon tidak tersedia",1).show();}}
  protected void onZoneChanged(){SolatAlarms.stop(this);SolatAlarms.schedule(this);}
