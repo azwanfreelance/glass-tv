@@ -1,3 +1,14 @@
+# Current status: Alpha3 HOME request fix
+
+User reports Alpha2 opens but remote Home still opens Haier; the prior Home-settings button provides no Always choice. Code audit: it only launched ACTION_HOME_SETTINGS, not RoleManager.createRequestRoleIntent(ROLE_HOME). This observation does not yet prove the firmware cannot grant HOME.
+
+Alpha3 adds an interactive HomeSettingsActivity: explicit user button requests the official HOME role if available, handles activity result without assuming success, re-reads isRoleHeld and the Android-resolved HOME handler, and displays both plus limitations. All entry points use this screen. System Home/default-app settings remain optional rollback routes, not a promise of a picker. Removed the prior NoDisplay theme, which cannot remain active awaiting a role result. HOME intent visibility added for accurate handler queries. No new permissions, ADB, Accessibility, package disabling, hidden APIs or forced Home assignment.
+
+Hardware acceptance remains pending. A role can be unavailable or denied; even a role grant may not control the OEM remote Home button. Alpha3 is a request/diagnostic fix, not a guaranteed permanent-launcher solution. Do not claim a Haier lock before observing result. Signing is still the documented CI debug-key alpha mechanism; replacing an installed Alpha2 from another runner may require the user to reinstall this app, losing its private settings. Do not uninstall Google TV.
+
+---
+## Historical evidence
+
 # Current status: Alpha2 installation fix
 
 User's TV screenshot shows Alpha1 was NOT installed: Play Protect displays “App blocked to protect your device” and a sensitive-data/financial-fraud warning. The earlier handoff only proved builds/tests, not installation. Google guidance matches the notification-listener permission used for optional MediaSession control: https://developers.google.com/android/play-protect/warning-dev-guidance . This is the most strongly supported cause; no Play Protect engine verdict/log was accessed.
