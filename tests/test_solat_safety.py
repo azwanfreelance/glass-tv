@@ -12,3 +12,10 @@ class SolatSafetyTest(unittest.TestCase):
         self.assertNotIn('BIND_ACCESSIBILITY_SERVICE', manifest)
     def test_distinct_package_prevents_replacing_original(self):
         self.assertIn("applicationId 'my.azwan.solattv'", (ROOT/'launcher/app/build.gradle').read_text())
+    def test_no_access_to_other_apps_notifications(self):
+        manifest = (ROOT/'launcher/app/src/main/AndroidManifest.xml').read_text()
+        self.assertFalse('BIND_NOTIFICATION_LISTENER_SERVICE' in manifest,
+                         'A sideloaded prayer app must not request notification access')
+        sources = '\n'.join(p.read_text() for p in (ROOT/'launcher/app/src/main/java').rglob('*.java'))
+        self.assertFalse('NotificationListenerService' in sources)
+        self.assertFalse('getActiveSessions' in sources)

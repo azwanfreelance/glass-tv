@@ -1,6 +1,6 @@
 # Pasang Glass TV + Solat menggunakan telefon Android
 
-Status: alpha untuk ujian pengguna pada Haier MatrixTV EE, Android TV14. APK berjaya dibina tidak bermaksud fungsi perkakasan Haier sudah diuji. Jangan gunakan APK Glass TV asas daripada PR1 untuk varian ini.
+Status: alpha2 untuk ujian pengguna pada Haier MatrixTV EE, Android TV14. APK berjaya dibina tidak bermaksud fungsi perkakasan Haier sudah diuji. Jangan gunakan APK Glass TV asas daripada PR1 untuk varian ini.
 
 ## Muat turun dan pindahkan
 1. Muat turun fail APK yang disertakan dalam serahan akhir ke telefon. Jika menggunakan GitHub Actions, buka binaan terakhir yang dinyatakan, log masuk GitHub, muat turun artifact `solat-tv-release-apk` dan ekstrak ZIP sehingga mendapat `app-release.apk`. Artifact GitHub luput selepas14hari.
@@ -16,10 +16,10 @@ Status: alpha untuk ujian pengguna pada Haier MatrixTV EE, Android TV14. APK ber
 3. Muat turun jadual JAKIM. Semak lima waktu dan zon sebelum hidupkan peringatan. Jadual disimpan offline; kemas kini berkala12jam dibuat apabila Android membenarkan rangkaian/job berjalan. Selepas cache tamat tahun, muat turun jadual tahun baru; tiada waktu atau Hijri dianggar jika data seterusnya belum ada.
 4. Benarkan notifikasi dan alarm tepat melalui butang dalam Settings. Hidupkan peringatan selepas status kedua-duanya OK. Android boleh menyekat selepas revoke/force-stop; buka semula aplikasi dan semak status.
 5. Untuk peringatan di atas Netflix/YouTube, benarkan **Display over other apps** jika firmware menyediakan pilihan. Jika tidak, aplikasi menggunakan notifikasi; sesetengah firmware TV tidak memaparkannya seperti telefon.
-6. Jika mahu cuba pause, baca penerangan **Notification access** dahulu. Ini kebenaran luas Android untuk akses MediaSession; kod ini tidak membaca/menyimpan notifikasi. Jika pilihan tidak wujud, azan menggunakan audio focus. Sokongan Netflix/YouTube tidak dijamin.
+6. Alpha2 tidak meminta akses notifikasi aplikasi lain dan tidak menyenaraikan MediaSession. Azan meminta audio focus Android; aplikasi video boleh menjeda atau mengabaikannya. Tiada arahan PLAY dihantar.
 7. Pilihan pertukaran Hijri selepas Maghrib menggunakan rekod rasmi hari berikutnya. Jika rekod tiada, paparan menyatakan belum tersedia.
 8. Cuba **Uji peringatan10s** dahulu. Selepas itu, **Uji azan20s + volume11** meminta pengesahan pada skrin TV. Ujian20s ialah petikan; azan berjadual memainkan keseluruhan rakaman154s. Audio biasa digunakan bagi semua lima waktu, belum ada varian Subuh khusus.
-9. Semak volume asal pulih dan video kekal dijeda. Solat TV tidak menghantar PLAY. Aplikasi lain tetap boleh mengurus sambung semula sendiri; perkara ini perlu diuji pada TV.
+9. Semak volume asal pulih dan lihat sama ada aplikasi video menjeda apabila audio focus diminta. Solat TV tidak menghantar PLAY. Aplikasi lain tetap boleh mengurus sambung semula sendiri; perkara ini perlu diuji pada TV.
 10. **Hentikan azan / tutup peringatan** tersedia melalui Settings. Overlay tidak mengambil fokus remote. Reminder berjadual tamat15minit selepas waktu masuk, bukan15minit selepas audio tamat.
 
 ## Home dan kembali ke Google TV
@@ -33,3 +33,7 @@ Untuk rollback, matikan peringatan, pilih Google TV melalui pemilih Home jika te
 - Volume asal disimpan sebelum perubahan dan dipulihkan pada selesai, ralat, stop atau watchdog180s jika proses mati. Jika Android membunuh seluruh aplikasi sambil membatalkan semua alarm (misalnya revoke exact-alarm atau force-stop), pemulihan mungkin menunggu pembukaan aplikasi seterusnya.
 - Cache tamat, rangkaian gagal dan pertukaran tahun tidak menghasilkan waktu rekaan. Pastikan muat turun tahun baru berjaya sebelum bergantung pada azan tahun baru.
 - APK alpha dengan tandatangan debug untuk ujian peribadi, belum keluaran production. Kunci debug runner boleh berubah antara binaan; kemas kini mungkin perlu uninstall/reinstall dan menetapkan semula zon/kebenaran. Jangan uninstall sebelum mencatat tetapan.
+
+
+## Jika muncul sekatan Play Protect seperti Alpha1
+Kekalkan Play Protect aktif. Alpha1 ditolak pada TV pengguna dengan mesej akses data sensitif. Alpha2 membuang servis NotificationListener dan keseluruhan laluan akses notifikasi/MediaSession aplikasi lain. Ini pengurangan keupayaan/kebenaran sebenar; pemasangan masih perlu dinilai oleh Play Protect pada peranti, dan belum dijamin lulus. Jika masih disekat, hentikan pemasangan dan laporkan gambar mesej; jangan matikan perlindungan atau ubah laluan pemasangan untuk memintasnya.

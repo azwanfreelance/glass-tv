@@ -25,17 +25,15 @@ public class SolatSettingsActivity extends Activity {
  protected void buildReminderSettings(){
   button("Peringatan: hidup / mati",()->{
    boolean on=!SolatAlarms.enabled(this);
-   if(on&&(!SolatAlarms.allowed(this)||!canNotify()||SolatStore.zone(this).isEmpty())){new AlertDialog.Builder(this).setMessage("Pilih zon, muat turun jadual dan benarkan notifikasi serta alarm tepat dahulu. Overlay dan akses MediaSession adalah pilihan.").setPositiveButton("OK",null).show();return;}
+   if(on&&(!SolatAlarms.allowed(this)||!canNotify()||SolatStore.zone(this).isEmpty())){new AlertDialog.Builder(this).setMessage("Pilih zon, muat turun jadual dan benarkan notifikasi serta alarm tepat dahulu. Overlay adalah pilihan. Tiada akses notifikasi aplikasi lain diperlukan.").setPositiveButton("OK",null).show();return;}
    if(on&&PrayerDay.on(SolatStore.load(this),LocalDate.now(PrayerDay.MALAYSIA))==null){Toast.makeText(this,"Muat turun jadual sah dahulu",1).show();return;}
    SolatStore.prefs(this).edit().putBoolean("enabled",on).commit();if(!on)SolatAlarms.stop(this);SolatAlarms.schedule(this);render();
   });
   button("1. Benarkan notifikasi",()->{if(Build.VERSION.SDK_INT>=33&&checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)!=android.content.pm.PackageManager.PERMISSION_GRANTED)requestPermissions(new String[]{android.Manifest.permission.POST_NOTIFICATIONS},7);else open(new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE,getPackageName()));});
   button("2. Benarkan alarm tepat (Android 12+)",()->{if(Build.VERSION.SDK_INT>=31)open(new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,android.net.Uri.parse("package:"+getPackageName())));});
   button("3. Paparan di atas aplikasi lain (pilihan)",()->open(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,android.net.Uri.parse("package:"+getPackageName()))));
-  button("4. Cuba pause video: kebenaran MediaSession (pilihan)",()->new AlertDialog.Builder(this).setTitle("Kebenaran pilihan").setMessage("Android memerlukan Notification access untuk menyenaraikan MediaSession aplikasi lain. Kebenaran ini luas: Android membenarkan akses notifikasi. Solat TV tidak membaca atau menyimpan kandungan notifikasi; ia hanya menghantar PAUSE kepada sesi yang sedang PLAYING. Jika tiada kebenaran atau aplikasi menolak PAUSE, gunakan audio focus. Sesetengah aplikasi mungkin menyambung sendiri; Solat TV tidak menghantar PLAY.").setPositiveButton("Buka tetapan",(d,v)->open(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))).setNegativeButton("Batal",null).show());
-  button("Cuba pause video: hidup / mati",()->{boolean value=!SolatStore.prefs(this).getBoolean("pause",true);SolatStore.prefs(this).edit().putBoolean("pause",value).apply();render();});
   button("Uji peringatan 10 saat (tanpa pause)",()->test(true));
-  button("Uji azan 20 saat + volume 11",()->new AlertDialog.Builder(this).setMessage("Ujian ini memainkan 20 saat audio azan, cuba PAUSE video dan pulihkan volume asal. Azan berjadual memainkan rakaman penuh. Teruskan pada TV ini?").setPositiveButton("Uji",(d,v)->test(false)).setNegativeButton("Batal",null).show());
+  button("Uji azan 20 saat + volume 11",()->new AlertDialog.Builder(this).setMessage("Ujian ini memainkan 20 saat audio azan, meminta audio focus Android (video mungkin dijeda, bergantung aplikasi) dan pulihkan volume asal. Azan berjadual memainkan rakaman penuh. Teruskan pada TV ini?").setPositiveButton("Uji",(d,v)->test(false)).setNegativeButton("Batal",null).show());
   button("Hentikan azan / tutup peringatan",()->{SolatAlarms.stop(this);render();});
  }
  private boolean canNotify(){return SolatAlarms.canNotify(this);}
@@ -48,9 +46,9 @@ public class SolatSettingsActivity extends Activity {
   long t=SolatStore.prefs(this).getLong("fetched_"+SolatStore.zone(this),0);s.append("\nKemas kini: ").append(t==0?"Belum tersedia":java.time.Instant.ofEpochMilli(t).atZone(PrayerDay.MALAYSIA).toLocalDateTime().withNano(0));s.append("\n\nPeringatan: ").append(SolatAlarms.enabled(this)?"HIDUP":"MATI");
   s.append(" · Alarm tepat: ").append(SolatAlarms.allowed(this)?"OK":"PERLU KEBENARAN");
   s.append("\nNotifikasi: ").append(canNotify()?"OK":"PERLU KEBENARAN").append(" · Overlay: ").append(Settings.canDrawOverlays(this)?"OK":"Notifikasi sahaja");
-  s.append("\nCuba PAUSE: ").append(SolatStore.prefs(this).getBoolean("pause",true)?"HIDUP":"MATI");
+  s.append("\nVideo: audio focus sahaja; tiada akses notifikasi aplikasi lain");
   s.append("\n").append(SolatStore.prefs(this).getString("alarm_status","Belum dijadualkan"));
-  s.append("\n").append(SolatStore.prefs(this).getString("media_status","MediaSession memerlukan kebenaran pilihan"));
+  s.append("\n").append(SolatStore.prefs(this).getString("media_status","Audio focus boleh menjeda video jika aplikasi menyokongnya"));
   s.append("\n").append(SolatStore.prefs(this).getString("volume_status","Volume belum diubah"));
   s.append("\n").append(SolatStore.prefs(this).getString("last_event","Belum ada azan"));status.setText(s.toString());}
  private void chooseZone(){try{JSONArray a=SolatStore.zones(this);String[] labels=new String[a.length()];for(int i=0;i<a.length();i++)labels[i]=a.getJSONObject(i).getString("code")+" · "+a.getJSONObject(i).getString("name");new AlertDialog.Builder(this).setTitle("Zon rasmi JAKIM").setItems(labels,(dialog,index)->{try{SolatStore.prefs(this).edit().putString("zone",a.getJSONObject(index).getString("code")).commit();onZoneChanged();render();refresh();}catch(Exception ignored){}}).show();}catch(Exception e){Toast.makeText(this,"Senarai zon tidak tersedia",1).show();}}
