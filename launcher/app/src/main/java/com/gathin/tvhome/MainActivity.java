@@ -429,7 +429,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         btnSettings.setOnClickListener(v -> new android.app.AlertDialog.Builder(this)
                 .setTitle("Settings").setItems(new String[]{"Solat TV", "Tetapan sistem TV", "Pilih Home / kembali ke Google TV"}, (dialog, which) -> {
                     if (which == 0) startActivity(new Intent(this, com.gathin.tvhome.solat.SolatSettingsActivity.class));
-                    else open(systemIntent(which == 1 ? Settings.ACTION_SETTINGS : Settings.ACTION_HOME_SETTINGS));
+                    else if (which == 1) open(systemIntent(Settings.ACTION_SETTINGS));
+                    else startActivity(new Intent(this, HomeSettingsActivity.class));
                 }).show());
         btnSettings.setOnLongClickListener(v -> {
             if (!moduleCards) return false;   // off: a long press does nothing, as before the feature

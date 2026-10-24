@@ -17,7 +17,7 @@ public class SolatSettingsActivity extends Activity {
   Switch sw=new Switch(this);sw.setText("Hijri bertukar selepas Maghrib");sw.setTextColor(-1);sw.setChecked(SolatStore.maghrib(this));sw.setOnCheckedChangeListener((v,on)->{SolatStore.prefs(this).edit().putBoolean("maghrib",on).apply();render();});rows.addView(sw);
   button("Muat turun / kemas kini jadual JAKIM",()->refresh());
   button("Tetapan sistem TV",()->open(new Intent(Settings.ACTION_SETTINGS)));
-  button("Pilih Home / kembali ke Google TV",()->open(new Intent(Settings.ACTION_HOME_SETTINGS)));
+  button("Home utama / Google TV asal",()->startActivity(new Intent(this,com.gathin.tvhome.HomeSettingsActivity.class)));
   buildReminderSettings();
   button("Sumber & batasan",()->new AlertDialog.Builder(this).setTitle("Sumber & batasan").setMessage("Waktu & Hijri: portal rasmi e-Solat JAKIM. Tarikh selepas Maghrib menggunakan rekod Hijri hari berikutnya, bukan pengiraan anggaran. Cache tidak diekstrapolasi.\n\nHaier belum diuji secara fizikal. Pemilihan Home mungkin disekat firmware; aplikasi masih boleh dibuka dari Apps. Google TV asal kekal dipasang.\n\nTiada root, ADB, debloat, Accessibility atau force-stop. Audio: Beautiful adhan, Adam-synagda, Wikimedia Commons, CC0 (154 saat); rakaman azan biasa, bukan varian Subuh khusus. Volume 11 ialah indeks STREAM_MUSIC, bukan jaminan nombor yang sama pada soundbar HDMI. TV standby, kebenaran ditarik balik atau firmware boleh menghalang peringatan. Tiada arahan PLAY dihantar.").setPositiveButton("Tutup",null).show());
   button("Kembali",()->finish());render();

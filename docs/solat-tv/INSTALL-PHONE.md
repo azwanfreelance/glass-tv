@@ -1,6 +1,6 @@
 # Pasang Glass TV + Solat menggunakan telefon Android
 
-Status: alpha2 untuk ujian pengguna pada Haier MatrixTV EE, Android TV14. APK berjaya dibina tidak bermaksud fungsi perkakasan Haier sudah diuji. Jangan gunakan APK Glass TV asas daripada PR1 untuk varian ini.
+Status: alpha3 untuk ujian pengguna pada Haier MatrixTV EE, Android TV14. APK berjaya dibina tidak bermaksud fungsi perkakasan Haier sudah diuji. Jangan gunakan APK Glass TV asas daripada PR1 untuk varian ini.
 
 ## Muat turun dan pindahkan
 1. Muat turun fail APK yang disertakan dalam serahan akhir ke telefon. Jika menggunakan GitHub Actions, buka binaan terakhir yang dinyatakan, log masuk GitHub, muat turun artifact `solat-tv-release-apk` dan ekstrak ZIP sehingga mendapat `app-release.apk`. Artifact GitHub luput selepas14hari.
@@ -37,3 +37,9 @@ Untuk rollback, matikan peringatan, pilih Google TV melalui pemilih Home jika te
 
 ## Jika muncul sekatan Play Protect seperti Alpha1
 Kekalkan Play Protect aktif. Alpha1 ditolak pada TV pengguna dengan mesej akses data sensitif. Alpha2 membuang servis NotificationListener dan keseluruhan laluan akses notifikasi/MediaSession aplikasi lain. Ini pengurangan keupayaan/kebenaran sebenar; pemasangan masih perlu dinilai oleh Play Protect pada peranti, dan belum dijamin lulus. Jika masih disekat, hentikan pemasangan dan laporkan gambar mesej; jangan matikan perlindungan atau ubah laluan pemasangan untuk memintasnya.
+
+
+## Alpha3: Home utama
+Buka ikon Settings > Solat TV > Home utama / Google TV asal > Jadikan Glass TV + Solat sebagai Home. Ini meminta peranan HOME melalui dialog rasmi Android, bukannya menetapkan secara paksa. Jika dialog muncul, pilih Glass TV + Solat dan luluskan. Jika tiada dialog atau permintaan tidak diberikan, ambil gambar skrin status Home dalam aplikasi. Jangan anggap sentiasa/Always tersedia pada Haier.
+Skrin status menunjukkan peranan HOME dan aplikasi yang dipilih Android. Jika status diberikan tetapi remote tetap membuka Haier, laporkan keadaan itu. Tidak ada jaminan peranan mengubah kelakuan butang OEM.
+Kunci tandatangan alpha mungkin berbeza daripada Alpha2. Jika Android menolak kemas kini kerana tandatangan, catat zon/kebenaran dahulu; pemasangan semula hanya Glass TV + Solat mungkin diperlukan. Tetapan aplikasi akan hilang. Jangan uninstall atau nyahaktifkan launcher Google TV/Haier.
