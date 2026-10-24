@@ -29,12 +29,12 @@ public class SolatReminderService extends Service {
   TextView t=new TextView(this);t.setText(text+"\nSolat TV · Tutup melalui Settings > Hentikan azan");t.setTextColor(Color.WHITE);t.setTextSize(19);t.setPadding(24,18,24,18);t.setBackgroundColor(0xee151c25);
   int width=(int)(430*getResources().getDisplayMetrics().density);WindowManager.LayoutParams lp=new WindowManager.LayoutParams(width,-2,WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,android.graphics.PixelFormat.TRANSLUCENT);lp.gravity=Gravity.TOP|Gravity.END;lp.y=28;lp.x=28;getSystemService(WindowManager.class).addView(t,lp);overlay=t;
  }catch(RuntimeException ignored){}}
- private void startAudio(){audio=getSystemService(AudioManager.class);recoverVolume(this);boolean paused=SolatMedia.pause(this);
+ private void startAudio(){audio=getSystemService(AudioManager.class);recoverVolume(this);
   AudioAttributes attrs=new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).build();
   // Permanent focus avoids sending transient-focus regain as an invitation to auto-resume video.
   focus=new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN).setAudioAttributes(attrs).setOnAudioFocusChangeListener(change->{if(change<0){finishAudio();}}).build();
   if(audio.requestAudioFocus(focus)!=AudioManager.AUDIOFOCUS_REQUEST_GRANTED){SolatStore.prefs(this).edit().putString("media_status","Audio focus ditolak; peringatan sahaja").apply();return;}
-  SolatStore.prefs(this).edit().putString("media_status",paused?"Permintaan PAUSE dihantar; tiada arahan PLAY":"Tiada MediaSession PAUSE; fallback audio focus").apply();
+  SolatStore.prefs(this).edit().putString("media_status","Audio focus Android sahaja; tiada akses notifikasi aplikasi lain atau arahan PLAY").apply();
   try{if(!audio.isVolumeFixed()&&SolatAlarms.scheduleRecovery(this)){
     original=audio.getStreamVolume(AudioManager.STREAM_MUSIC);
     if(SolatStore.prefs(this).edit().putInt("saved_volume",original).commit()) {changed=true;activeAudio=true;audio.setStreamVolume(AudioManager.STREAM_MUSIC,ReminderPlan.volume(audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC)),0);}

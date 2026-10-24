@@ -1,3 +1,14 @@
+# Current status: Alpha2 installation fix
+
+User's TV screenshot shows Alpha1 was NOT installed: Play Protect displays “App blocked to protect your device” and a sensitive-data/financial-fraud warning. The earlier handoff only proved builds/tests, not installation. Google guidance matches the notification-listener permission used for optional MediaSession control: https://developers.google.com/android/play-protect/warning-dev-guidance . This is the most strongly supported cause; no Play Protect engine verdict/log was accessed.
+
+Alpha2 genuinely removes NotificationListenerService and the entire getActiveSessions/transport-controls implementation and permission UI. Audio focus is the only video-interruption mechanism; direct MediaSession PAUSE is no longer available. Own reminder notifications (POST_NOTIFICATIONS), overlay, azan/volume recovery, exact alarms, JAKIM and Hijri remain. Play Protect stays ON. New regression guards and a packaged-manifest permission check must pass. Device installation acceptance remains unverified until the user retries; do not claim Google approval or guaranteed installation.
+
+Changes are on fix/solat-tv-notification-access in a separate draft PR, no merge/deployment.
+
+---
+## Historical Alpha1 build evidence (superseded for installation)
+
 # Glass TV + Solat TV — 24 October 2026
 
 Requested: Glass TV original launcher for Haier MatrixTV EE Android TV14; JAKIM five prayers, selected zone, offline schedule; official Hijri with optional Maghrib rollover; prealert at -10 minutes, visible10 seconds; full azan, volume11 where supported, restore original volume, optional MediaSession PAUSE; reminder until prayer+15 minutes; no automatic PLAY.

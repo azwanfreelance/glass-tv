@@ -85,10 +85,6 @@
             <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="User-enabled prayer reminder overlay: 10 seconds before prayer, or until 15 minutes after prayer. No continuous monitoring." />
         </service>
-        <service android:name=".solat.SolatMediaListener" android:label="Solat TV: optional MediaSession pause"
-            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" android:exported="true">
-            <intent-filter><action android:name="android.service.notification.NotificationListenerService" /></intent-filter>
-        </service>
         <activity android:name=".solat.SolatSettingsActivity" android:exported="false" />
         <activity
             android:name=".HomeSettingsActivity"

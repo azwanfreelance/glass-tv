@@ -48,6 +48,8 @@ jobs:
           ./gradlew --no-daemon testReleaseUnitTest assembleRelease
       - name: Bound code and offline audio size
         run: python3 tools/check_apk_size.py launcher/app/build/outputs/apk/release/app-release.apk
+      - name: Verify packaged minimum permissions
+        run: python3 tools/check_apk_permissions.py launcher/app/build/outputs/apk/release/app-release.apk
       - name: Upload release APK
         uses: actions/upload-artifact@v4
         with:
