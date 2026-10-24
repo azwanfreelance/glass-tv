@@ -39,13 +39,24 @@ jobs:
         with:
           packages: platforms;android-34 build-tools;34.0.0
       - uses: gradle/actions/setup-gradle@v4
+      - name: Fetch checksum-pinned CC0 azan audio
+        run: python3 tools/fetch-adhan.py
       - name: Unit tests and release build
         working-directory: launcher
         run: |
           chmod +x gradlew
           ./gradlew --no-daemon testReleaseUnitTest assembleRelease
-      - name: The launcher stays small
+      - name: Bound code and offline audio size
         run: |
-          size=$(stat -c %s launcher/app/build/outputs/apk/release/app-release.apk)
-          echo "release APK: $((size / 1024)) KB"
-          test "$size" -lt 409600 || { echo "APK is over 400 KB; the launcher targets 1 GB TVs, keep it small"; exit 1; }
+          python3 - <<'PYCI'
+          from zipfile import ZipFile
+          from pathlib import Path
+          apk = Path('launcher/app/build/outputs/apk/release/app-release.apk')
+          with ZipFile(apk) as z:
+              audio = sum(i.compress_size for i in z.infolist() if i.filename.endswith('/adhan.ogg'))
+          code = apk.stat().st_size - audio
+          print('Total APK:', apk.stat().st_size, 'non-audio:', code)
+          assert audio > 0, 'Offline audio missing'
+          assert code < 409600, 'Non-audio launcher exceeds original 400 KB budget'
+          assert apk.stat().st_size < 2097152, 'Total release APK exceeds 2 MB'
+          PYCI

@@ -28,14 +28,26 @@ jobs:
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-34" "build-tools;34.0.0"
       - name: Make Gradle wrapper executable
         run: chmod +x ./gradlew
+      - name: Fetch checksum-pinned CC0 azan audio
+        working-directory: .
+        run: python3 tools/fetch-adhan.py
       - name: Run unit tests
         run: ./gradlew testDebugUnitTest --no-daemon
       - name: Build debug APK (does not connect to TV)
         run: ./gradlew assembleDebug --no-daemon
+      - name: Upload test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: solat-tv-unit-test-reports
+          path: launcher/app/build/test-results/testDebugUnitTest/
+          if-no-files-found: warn
+      - name: APK checksum
+        run: sha256sum app/build/outputs/apk/debug/app-debug.apk
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: glass-tv-debug-apk
+          name: solat-tv-debug-apk
           path: launcher/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
