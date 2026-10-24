@@ -11,3 +11,9 @@ Haier MatrixTV EE is not listed as hardware-tested in upstream docs/DEVICES.md. 
 Phase2: PR2 head53c6b4cd4b670fa45eff575ead7183f3b1835782 passed both Actions workflows (build40049474272, CI40049474210). Self-ADB and Accessibility code removed; original launcher preserved.
 
 Phase3: official 60-zone catalogue captured from https://www.e-solat.gov.my/index.php?pageId=50&siteId=24 on 24 October2026. API year response verified live for SGR01, dated rows include hijri/date and five prayers. No estimated Hijri conversion or prayer calculation.
+
+Phase3 build40049979835 and CI40049979839 passed after correcting an escaped multiline help string. Live365-day SGR01 payload exposed Malay month abbreviations; regression now covers all12 months, and the live payload parses2026-01-01 through2026-12-31. This parser correction is included in the reminder phase.
+
+Phase4 first debug APK build40050043848 passed. Release build also compiled; its separate APK size check failed and is being investigated. Final deliverable must use the post-review commit, not this intermediate APK.
+
+Independent code review: immediate foreground-notification behavior is required for a10-second prealert; notification permission/channel readiness is rechecked before side effects. Process-death volume recovery uses a separate exact restore alarm. No device test has run.

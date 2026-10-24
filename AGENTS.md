@@ -1,3 +1,6 @@
+# Solat TV fork override — applies before upstream setup guide
+For this fork, develop/build only; never connect to or modify a TV. No ADB (including self-ADB), root, debloat, launcher disabling, Accessibility or installation scripts. Preserve Google TV and its system HOME chooser. User performs phone-only installation after approval; do not deploy or merge major changes without approval. Follow docs/solat-tv/INSTALL-PHONE.md and STATUS.md. The upstream installation guide below is reference only and is superseded by these restrictions.
+
 # Instructions for AI agents
 
 You are helping someone set up **Glass TV** on their own TV: on Android TV and Google TV, debloat it and install

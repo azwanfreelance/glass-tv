@@ -5,8 +5,8 @@ ROOT = Path(__file__).resolve().parents[1]
 class SolatSafetyTest(unittest.TestCase):
     def test_no_debugging_client_in_apk_sources(self):
         sources = '\n'.join(p.read_text() for p in (ROOT/'launcher/app/src/main/java').rglob('*.java'))
-        self.assertNotIn('shell:pm trim-caches', sources)
-        self.assertNotIn('CacheCleaner.maybeRun', sources)
+        self.assertFalse('shell:pm trim-caches' in sources)
+        self.assertFalse('CacheCleaner.maybeRun' in sources)
     def test_no_accessibility_service_in_apk(self):
         manifest = (ROOT/'launcher/app/src/main/AndroidManifest.xml').read_text()
         self.assertNotIn('BIND_ACCESSIBILITY_SERVICE', manifest)

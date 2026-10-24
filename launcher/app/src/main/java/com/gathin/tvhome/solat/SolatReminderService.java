@@ -9,11 +9,11 @@ public class SolatReminderService extends Service {
  @Override public IBinder onBind(Intent i){return null;}
  static void channel(Context c){NotificationChannel ch=new NotificationChannel(CHANNEL,"Peringatan solat",NotificationManager.IMPORTANCE_HIGH);ch.setSound(null,null);ch.enableVibration(false);c.getSystemService(NotificationManager.class).createNotificationChannel(ch);}
  static Notification note(Context c,String text,long timeout,boolean ongoing){channel(c);PendingIntent settings=PendingIntent.getActivity(c,0,new Intent(c,SolatSettingsActivity.class),PendingIntent.FLAG_IMMUTABLE|PendingIntent.FLAG_UPDATE_CURRENT);
-  return new Notification.Builder(c,CHANNEL).setSmallIcon(android.R.drawable.ic_lock_idle_alarm).setContentTitle("Solat TV").setContentText(text).setContentIntent(settings).setCategory(Notification.CATEGORY_REMINDER).setTimeoutAfter(Math.max(1,timeout)).setOnlyAlertOnce(true).setOngoing(ongoing).build();}
+  Notification.Builder builder=new Notification.Builder(c,CHANNEL).setSmallIcon(android.R.drawable.ic_lock_idle_alarm).setContentTitle("Solat TV").setContentText(text).setContentIntent(settings).setCategory(Notification.CATEGORY_REMINDER).setTimeoutAfter(Math.max(1,timeout)).setOnlyAlertOnce(true).setOngoing(ongoing);if(Build.VERSION.SDK_INT>=31)builder.setForegroundServiceBehavior(Notification.FOREGROUND_SERVICE_IMMEDIATE);return builder.build();}
  static void fallback(Context c,String text,long timeout){try{c.getSystemService(NotificationManager.class).notify(ID,note(c,text,timeout,false));}catch(RuntimeException ignored){}}
  private void foreground(){Notification n=note(this,text,Math.max(1,expiry-System.currentTimeMillis()),true);if(Build.VERSION.SDK_INT>=34)startForeground(ID,n,ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE|(pre?0:ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK));else startForeground(ID,n);}
  @Override public int onStartCommand(Intent i,int flags,int id){
-  if(i==null){stopSelf();return START_NOT_STICKY;}cleanup();
+  if(i==null||!SolatAlarms.canNotify(this)){stopSelf();return START_NOT_STICKY;}cleanup();
   pre=i.getBooleanExtra("before",false);boolean test=i.getBooleanExtra("test",false);long prayer=i.getLongExtra("prayer",System.currentTimeMillis());int index=i.getIntExtra("index",0);if(index<0||index>=5){stopSelf();return START_NOT_STICKY;}
   expiry=pre?System.currentTimeMillis()+10000:ReminderPlan.until(prayer);if(test)expiry=System.currentTimeMillis()+20000;
   if(expiry<=System.currentTimeMillis()){stopSelf();return START_NOT_STICKY;}
@@ -32,7 +32,7 @@ public class SolatReminderService extends Service {
   focus=new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN).setAudioAttributes(attrs).setOnAudioFocusChangeListener(change->{if(change<0){finishAudio();}}).build();
   if(audio.requestAudioFocus(focus)!=AudioManager.AUDIOFOCUS_REQUEST_GRANTED){SolatStore.prefs(this).edit().putString("media_status","Audio focus ditolak; peringatan sahaja").apply();return;}
   SolatStore.prefs(this).edit().putString("media_status",paused?"Permintaan PAUSE dihantar; tiada arahan PLAY":"Tiada MediaSession PAUSE; fallback audio focus").apply();
-  try{if(!audio.isVolumeFixed()){
+  try{if(!audio.isVolumeFixed()&&SolatAlarms.scheduleRecovery(this)){
     original=audio.getStreamVolume(AudioManager.STREAM_MUSIC);
     if(SolatStore.prefs(this).edit().putInt("saved_volume",original).commit()) {changed=true;activeAudio=true;audio.setStreamVolume(AudioManager.STREAM_MUSIC,ReminderPlan.volume(audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC)),0);}
    }
@@ -48,7 +48,7 @@ public class SolatReminderService extends Service {
   // The remaining service is an explicit bounded prayer reminder, not media playback.
   if(Build.VERSION.SDK_INT>=34&&!pre&&expiry>System.currentTimeMillis())try{startForeground(ID,note(this,text,expiry-System.currentTimeMillis(),true),ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);}catch(RuntimeException ignored){}
  }
- static void recoverVolume(Context c){if(activeAudio)return;android.content.SharedPreferences p=SolatStore.prefs(c);if(!p.contains("saved_volume"))return;AudioManager a=c.getSystemService(AudioManager.class);try{if(!a.isVolumeFixed()){int v=p.getInt("saved_volume",0);a.setStreamVolume(AudioManager.STREAM_MUSIC,Math.max(0,Math.min(v,a.getStreamMaxVolume(AudioManager.STREAM_MUSIC))),0);}p.edit().remove("saved_volume").commit();}catch(RuntimeException ignored){}}
+ static void recoverVolume(Context c){if(activeAudio)return;android.content.SharedPreferences p=SolatStore.prefs(c);if(!p.contains("saved_volume"))return;AudioManager a=c.getSystemService(AudioManager.class);try{if(!a.isVolumeFixed()){int v=p.getInt("saved_volume",0);a.setStreamVolume(AudioManager.STREAM_MUSIC,Math.max(0,Math.min(v,a.getStreamMaxVolume(AudioManager.STREAM_MUSIC))),0);}if(p.edit().remove("saved_volume").commit())SolatAlarms.cancelRecovery(c);}catch(RuntimeException ignored){}}
  private void cleanup(){h.removeCallbacksAndMessages(null);expiry=0;finishAudio();if(overlay!=null){try{getSystemService(WindowManager.class).removeView(overlay);}catch(RuntimeException ignored){}overlay=null;}}
  @Override public void onDestroy(){cleanup();stopForeground(STOP_FOREGROUND_REMOVE);super.onDestroy();}
  @Override public void onTaskRemoved(Intent root){stopSelf();}

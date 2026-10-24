@@ -38,8 +38,8 @@ public class SolatSettingsActivity extends Activity {
   button("Uji azan 20 saat + volume 11",()->new AlertDialog.Builder(this).setMessage("Ujian ini memainkan 20 saat audio azan, cuba PAUSE video dan pulihkan volume asal. Azan berjadual memainkan rakaman penuh. Teruskan pada TV ini?").setPositiveButton("Uji",(d,v)->test(false)).setNegativeButton("Batal",null).show());
   button("Hentikan azan / tutup peringatan",()->{SolatAlarms.stop(this);render();});
  }
- private boolean canNotify(){return getSystemService(NotificationManager.class).areNotificationsEnabled()&&(Build.VERSION.SDK_INT<33||checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)==android.content.pm.PackageManager.PERMISSION_GRANTED);}
- private void test(boolean pre){if(!canNotify()){Toast.makeText(this,"Benarkan notifikasi dahulu",1).show();return;}try{startForegroundService(new Intent(this,SolatReminderService.class).putExtra("before",pre).putExtra("test",true).putExtra("index",0).putExtra("prayer",System.currentTimeMillis()));}catch(RuntimeException e){Toast.makeText(this,"Perkhidmatan disekat Android",1).show();}}
+ private boolean canNotify(){return SolatAlarms.canNotify(this);}
+ private void test(boolean pre){if(!canNotify()||(!pre&&!SolatAlarms.allowed(this))){Toast.makeText(this,"Benarkan notifikasi dan alarm tepat dahulu",1).show();return;}try{startForegroundService(new Intent(this,SolatReminderService.class).putExtra("before",pre).putExtra("test",true).putExtra("index",0).putExtra("prayer",System.currentTimeMillis()));}catch(RuntimeException e){Toast.makeText(this,"Perkhidmatan disekat Android",1).show();}}
 
  protected void button(String label,Runnable run){Button b=new Button(this);b.setText(label);b.setAllCaps(false);b.setOnClickListener(v->run.run());rows.addView(b,new LinearLayout.LayoutParams(-1,-2));}
  protected void open(Intent i){try{startActivity(i);}catch(Exception e){Toast.makeText(this,"Pilihan ini tidak disediakan firmware TV. Gunakan Settings TV.",Toast.LENGTH_LONG).show();}}

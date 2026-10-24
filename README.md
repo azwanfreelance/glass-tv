@@ -1,3 +1,5 @@
+> **Solat TV fork (Haier Android TV14, alpha):** start with [phone-only installation and rollback](docs/solat-tv/INSTALL-PHONE.md) and [actual build/status](docs/solat-tv/STATUS.md). This fork does not use ADB, debloat, Accessibility helpers or disable Google TV. The upstream scripts documented below are NOT the installation route for Solat TV. All feature PRs remain unmerged pending approval.
+
 # Glass TV
 
 **Make your Android TV or Google TV fast and ad-free again: strip out the bloat and ads, free up memory,
