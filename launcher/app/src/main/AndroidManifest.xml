@@ -61,6 +61,7 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".solat.SolatSettingsActivity" android:exported="false" />
         <activity
             android:name=".HomeSettingsActivity"
             android:exported="false"
