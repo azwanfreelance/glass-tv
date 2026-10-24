@@ -3,7 +3,7 @@
 Status: alpha untuk ujian pengguna pada Haier MatrixTV EE, Android TV14. APK berjaya dibina tidak bermaksud fungsi perkakasan Haier sudah diuji. Jangan gunakan APK Glass TV asas daripada PR1 untuk varian ini.
 
 ## Muat turun dan pindahkan
-1. Muat turun fail APK yang disertakan dalam serahan akhir ke telefon. Jika menggunakan GitHub Actions, buka binaan terakhir yang dinyatakan, log masuk GitHub, muat turun artifact `solat-tv-debug-apk` dan ekstrak ZIP sehingga mendapat `app-debug.apk`. Artifact GitHub luput selepas14hari.
+1. Muat turun fail APK yang disertakan dalam serahan akhir ke telefon. Jika menggunakan GitHub Actions, buka binaan terakhir yang dinyatakan, log masuk GitHub, muat turun artifact `solat-tv-release-apk` dan ekstrak ZIP sehingga mendapat `app-release.apk`. Artifact GitHub luput selepas14hari.
 2. Pasang **Send files to TV** oleh Yablio dari Google Play pada telefon dan TV: https://play.google.com/store/apps/details?id=com.yablio.sendfilestotv . Kedua-duanya perlu pada Wi-Fi yang sama.
 3. Pada TV, pilih **Receive**. Pada telefon pilih **Send**, pilih fail APK, kemudian pilih TV.
 4. Pada TV, buka fail yang diterima. Jika diminta, benarkan **Install unknown apps** untuk aplikasi yang membuka fail itu sahaja, kemudian pilih **Install**. Jika aplikasi pemindahan tidak boleh membuka APK, buka melalui pengurus fail TV yang anda percayai. Nama menu bergantung firmware; ikut skrin TV, jangan gunakan skrip atau debugging.
@@ -32,4 +32,4 @@ Untuk rollback, matikan peringatan, pilih Google TV melalui pemilih Home jika te
 - Volume11 ialah indeks media Android yang dihadkan kepada maksimum peranti. Fixed-volume/HDMI soundbar mungkin mengekalkan volume sendiri.
 - Volume asal disimpan sebelum perubahan dan dipulihkan pada selesai, ralat, stop atau watchdog180s jika proses mati. Jika Android membunuh seluruh aplikasi sambil membatalkan semua alarm (misalnya revoke exact-alarm atau force-stop), pemulihan mungkin menunggu pembukaan aplikasi seterusnya.
 - Cache tamat, rangkaian gagal dan pertukaran tahun tidak menghasilkan waktu rekaan. Pastikan muat turun tahun baru berjaya sebelum bergantung pada azan tahun baru.
-- APK debug untuk ujian peribadi, belum keluaran production. Kunci debug runner boleh berubah antara binaan; kemas kini mungkin perlu uninstall/reinstall dan menetapkan semula zon/kebenaran. Jangan uninstall sebelum mencatat tetapan.
+- APK alpha dengan tandatangan debug untuk ujian peribadi, belum keluaran production. Kunci debug runner boleh berubah antara binaan; kemas kini mungkin perlu uninstall/reinstall dan menetapkan semula zon/kebenaran. Jangan uninstall sebelum mencatat tetapan.
