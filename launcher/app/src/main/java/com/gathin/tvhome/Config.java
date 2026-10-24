@@ -168,8 +168,8 @@ final class Config {
         long wallpaperIntervalMs = wallpaperSeconds > 0 ? wallpaperSeconds * 1000L : wallpaperMinutes * 60_000L;
         // On unless a theme says otherwise: a fresh install shows places with nothing to set up.
         boolean places = wallpaperOn && (json == null || bool(json, "places", true));
-        int cacheCleanDays = json != null ? integer(json, "cache_clean_days", CacheCleaner.DEFAULT_DAYS, 0, 90)
-                : CacheCleaner.DEFAULT_DAYS;
+        int cacheCleanDays = json != null ? integer(json, "cache_clean_days", 0, 0, 90)
+                : 0;
 
         return new Config(dock, hidden, liveTv, liveTvAction, panelService, panelAction, inputAction,
                 Math.max(1, columns), Math.max(0, rowsBelow), shamsi, moduleCards, reducedMotion,
