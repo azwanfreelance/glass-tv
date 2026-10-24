@@ -1,0 +1,14 @@
+from pathlib import Path
+import unittest
+import xml.etree.ElementTree as ET
+ROOT = Path(__file__).resolve().parents[1]
+class SolatSafetyTest(unittest.TestCase):
+    def test_no_debugging_client_in_apk_sources(self):
+        sources = '\n'.join(p.read_text() for p in (ROOT/'launcher/app/src/main/java').rglob('*.java'))
+        self.assertNotIn('shell:pm trim-caches', sources)
+        self.assertNotIn('CacheCleaner.maybeRun', sources)
+    def test_no_accessibility_service_in_apk(self):
+        manifest = (ROOT/'launcher/app/src/main/AndroidManifest.xml').read_text()
+        self.assertNotIn('BIND_ACCESSIBILITY_SERVICE', manifest)
+    def test_distinct_package_prevents_replacing_original(self):
+        self.assertIn("applicationId 'my.azwan.solattv'", (ROOT/'launcher/app/build.gradle').read_text())
